@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.in;
+import static com.mongodb.client.model.Filters.ne;
 
 public class PostRepository {
     private final MongoCollection<Document> eventsCollection;
@@ -50,6 +51,7 @@ public class PostRepository {
         while (cursor.hasNext()) {
             final Document next = cursor.next();
             Story story = (new Gson()).fromJson(JSON.serialize(next), Story.class);
+            story.setStoryId(next.get("_id").toString());
             stories.add(story);
         }
         return stories;
@@ -63,6 +65,7 @@ public class PostRepository {
         while (cursor.hasNext()) {
             final Document next = cursor.next();
             Event event = (new Gson()).fromJson(JSON.serialize(next), Event.class);
+            event.setEventId(next.get("_id").toString());
             events.add(event);
         }
         return events;

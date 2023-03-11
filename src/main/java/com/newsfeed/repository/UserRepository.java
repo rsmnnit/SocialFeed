@@ -62,7 +62,7 @@ public class UserRepository {
 
     public void makeFriends(@NonNull String userName1, @NonNull String userName2) {
         MongoCursor<Document> users =
-                friendsCollection.find(and(in("userName", userName1), in("userName", userName2))).iterator();
+                friendsCollection.find(and(in("userName", userName1), in("friendUserName", userName2))).iterator();
         if (!users.hasNext()) {
             Document dbObject =
                     Document.parse(gson.toJson(UserFriend.builder().friendUserName(userName2).userName(userName1).build()));

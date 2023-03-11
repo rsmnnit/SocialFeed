@@ -8,7 +8,7 @@ import com.newsfeed.service.PostServiceImpl;
 import com.newsfeed.service.UserService;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         PostService postService = new PostServiceImpl();
         FeedService feedService = new FeedService();
         UserService userService = new UserService();
@@ -27,7 +27,7 @@ public class Main {
         userService.makeFriends(user1.getUserName(), user3.getUserName());
         userService.makeFriends(user2.getUserName(), user4.getUserName());
         userService.makeFriends(user3.getUserName(), user5.getUserName());
-//        dummyPostPublishService.postDummyStory(user1.getUserName(), 5);
+        dummyPostPublishService.postDummyStory(user1.getUserName(), 1);
 //        dummyPostPublishService.postDummyStory(user1.getUserName(), 3, Arrays.asList("Covid"));
 //        dummyPostPublishService.postDummyStory(user2.getUserName(), 6);
 //        dummyPostPublishService.postDummyStory(user3.getUserName(), 4);
@@ -44,6 +44,8 @@ public class Main {
         printFeed(user3Feed, user3.getUserName());
         printFeed(user4Feed, user4.getUserName());
         printFeed(user5Feed, user5.getUserName());
+        Thread.sleep(5000);
+        dummyPostPublishService.postDummyStory(user5.getUserName(), 7);
     }
 
     private static void printFeed(Feed feed, String userName) {

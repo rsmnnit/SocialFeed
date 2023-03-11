@@ -1,11 +1,20 @@
 package com.newsfeed.handler;
 
-public class UserNotificationWorker implements Runnable {
+import com.newsfeed.UserFeedAlertSubscriber;
 
+public class UserNotificationWorker implements Runnable {
+    private final String postOwnerUserName;
+    private final String userToNotify;
+    private final UserFeedAlertSubscriber userFeedAlertSubscriber;
+
+    public UserNotificationWorker(String postOwnerUserName, String userToNotify) {
+        this.postOwnerUserName = postOwnerUserName;
+        this.userToNotify = userToNotify;
+        userFeedAlertSubscriber = new UserFeedAlertSubscriber();
+    }
 
     @Override
     public void run() {
-        do {
-        } while (true);
+        userFeedAlertSubscriber.sendNotification(postOwnerUserName, userToNotify);
     }
 }

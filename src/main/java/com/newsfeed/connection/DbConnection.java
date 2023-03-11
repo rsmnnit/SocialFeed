@@ -12,9 +12,8 @@ public class DbConnection {
 
     public static MongoDatabase getDatabase() {
         if (database == null) {
-            try (MongoClient mongo = new MongoClient("localhost", 27017)) {
-                database = mongo.getDatabase("news-feed");
-            }
+            MongoClient mongo = new MongoClient("localhost", 27017);
+            database = mongo.getDatabase("news-feed");
         }
         return database;
     }
