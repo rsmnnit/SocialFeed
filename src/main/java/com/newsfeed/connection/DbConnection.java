@@ -1,6 +1,7 @@
 package com.newsfeed.connection;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 public class DbConnection {
@@ -12,7 +13,7 @@ public class DbConnection {
 
     public static MongoDatabase getDatabase() {
         if (database == null) {
-            MongoClient mongo = new MongoClient("localhost", 27017);
+            MongoClient mongo = MongoClients.create("mongodb://localhost:27017");
             database = mongo.getDatabase("news-feed");
         }
         return database;

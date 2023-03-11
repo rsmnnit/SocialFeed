@@ -2,14 +2,14 @@ package com.newsfeed.connection;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
-import com.mongodb.util.JSON;
 import com.newsfeed.model.Story;
 import org.bson.Document;
 
@@ -25,7 +25,7 @@ public class DbConnection1 {
     public static void main(String args[]) {
 
         // Creating a Mongo client
-        MongoClient mongo = new MongoClient("localhost", 27017);
+        MongoClient mongo = MongoClients.create("mongodb://localhost:27017");
 
         // Creating Credentials
 //        MongoCredential credential;
@@ -100,16 +100,16 @@ public class DbConnection1 {
         Document dbObject = Document.parse(gson.toJson(story));
         collection.insertOne(dbObject);
         collection.updateOne(Filters.eq("_id", dbObject.get("_id")), Updates.set("likes", "1"));
-        if(dbObject.containsKey("likes"))
+        if (dbObject.containsKey("likes"))
             collection.updateOne(Filters.eq("_id", dbObject.get("_id")), new BasicDBObject().append("likes", 50));
         FindIterable<Document> doc2 = collection.find(in("postOwnerUserName", Arrays.asList("radhe")))
                 .sort(Sorts.descending("content"));
         it = doc2.iterator();
         while (it.hasNext()) {
-            final Document next = (Document)it.next();
+            final Document next = (Document) it.next();
 
-            System.out.println(JSON.serialize(next));
-            Story st = (new Gson()).fromJson(JSON.serialize(next), Story.class);
+            System.out.println(next.toJson());
+            Story st = (new Gson()).fromJson(next.toJson(), Story.class);
             st.setStoryId(next.get("_id").toString());
             System.out.println(st);
             i++;

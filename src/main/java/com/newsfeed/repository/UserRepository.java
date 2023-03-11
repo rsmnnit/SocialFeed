@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.util.JSON;
+
 import com.newsfeed.connection.DbConnection;
 import com.newsfeed.model.User;
 import com.newsfeed.model.UserFriend;
@@ -55,7 +55,7 @@ public class UserRepository {
 //            throw new RuntimeException("User not exists");
         }
         final Document next = users.next();
-        User user = (new Gson()).fromJson(JSON.serialize(next), User.class);
+        User user = (new Gson()).fromJson(next.toJson(), User.class);
         user.setUserId(next.get("_id").toString());
         return user;
     }
@@ -87,7 +87,7 @@ public class UserRepository {
         List<String> friends = new ArrayList<>();
         while (friendsItr.hasNext()) {
             final Document next = friendsItr.next();
-            UserFriend userFriend = (new Gson()).fromJson(JSON.serialize(next), UserFriend.class);
+            UserFriend userFriend = (new Gson()).fromJson(next.toJson(), UserFriend.class);
             friends.add(userFriend.getFriendUserName());
         }
         return friends;
@@ -98,7 +98,7 @@ public class UserRepository {
         List<String> topics = new ArrayList<>();
         while (topicsItr.hasNext()) {
             final Document next = topicsItr.next();
-            UserTopic userTopic = (new Gson()).fromJson(JSON.serialize(next), UserTopic.class);
+            UserTopic userTopic = (new Gson()).fromJson(next.toJson(), UserTopic.class);
             topics.add(userTopic.getTopic());
         }
         return topics;

@@ -25,10 +25,8 @@ repositories {
 }
 
 dependencies {
-//    implementation('org.springframework.boot:spring-boot-starter-web')
-//    testImplementation('org.springframework.boot:spring-boot-starter-test')
-//    testImplementation('org.springframework.boot:spring-boot-starter-data-mongodb')
-//    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.6.4'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.6.4'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
@@ -36,7 +34,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
-    implementation group: 'org.mongodb', name: 'mongodb-driver', version: '3.12.12'
+//    implementation group: 'org.mongodb', name: 'mongodb-driver', version: '3.12.12'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
 }
 

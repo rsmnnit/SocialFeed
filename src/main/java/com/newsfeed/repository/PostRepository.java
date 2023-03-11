@@ -6,7 +6,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
-import com.mongodb.util.JSON;
 import com.newsfeed.connection.DbConnection;
 import com.newsfeed.model.Event;
 import com.newsfeed.model.Story;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.in;
-import static com.mongodb.client.model.Filters.ne;
 
 public class PostRepository {
     private final MongoCollection<Document> eventsCollection;
@@ -50,7 +48,7 @@ public class PostRepository {
         List<Story> stories = new ArrayList<>();
         while (cursor.hasNext()) {
             final Document next = cursor.next();
-            Story story = (new Gson()).fromJson(JSON.serialize(next), Story.class);
+            Story story = (new Gson()).fromJson(next.toJson(), Story.class);
             story.setStoryId(next.get("_id").toString());
             stories.add(story);
         }
@@ -64,7 +62,7 @@ public class PostRepository {
         List<Event> events = new ArrayList<>();
         while (cursor.hasNext()) {
             final Document next = cursor.next();
-            Event event = (new Gson()).fromJson(JSON.serialize(next), Event.class);
+            Event event = (new Gson()).fromJson(next.toJson(), Event.class);
             event.setEventId(next.get("_id").toString());
             events.add(event);
         }
@@ -78,7 +76,7 @@ public class PostRepository {
         List<Event> events = new ArrayList<>();
         while (cursor.hasNext()) {
             final Document next = cursor.next();
-            Event event = (new Gson()).fromJson(JSON.serialize(next), Event.class);
+            Event event = (new Gson()).fromJson(next.toJson(), Event.class);
             events.add(event);
         }
         return events;
@@ -90,7 +88,7 @@ public class PostRepository {
         final MongoCursor<Document> cursor = storyDocs.iterator();
         List<Story> stories = new ArrayList<>();
         while (cursor.hasNext()) {
-            Story story = (new Gson()).fromJson(JSON.serialize(cursor.next()), Story.class);
+            Story story = (new Gson()).fromJson(cursor.next().toJson(), Story.class);
             stories.add(story);
         }
         return stories;
