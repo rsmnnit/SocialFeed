@@ -6,6 +6,8 @@ import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class UserService {
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -31,5 +33,13 @@ public class UserService {
     public void followTopic(@NonNull String userName, @NonNull String topic) {
         userRepository.followTopic(userName, topic);
         logger.info("Following topic, User1 : " + userName + " , Topic: " + topic);
+    }
+
+    public List<String> getFriends(String userName) {
+        return userRepository.getFriendsByUser(userName);
+    }
+
+    public List<String> getTopicsByUserName(String userName) {
+        return userRepository.getTopicsByUser(userName);
     }
 }

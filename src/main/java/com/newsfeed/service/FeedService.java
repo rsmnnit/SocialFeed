@@ -28,6 +28,7 @@ public class FeedService {
         return Feed.builder()
                 .stories(Stream.concat(storiesByTopics.stream(), storiesByFriends.stream()).distinct()
                         .sorted(Comparator.comparing(Story::getCreationTimeMillis).reversed()).collect(Collectors.toList()))
+                .events(postRepository.fetchMostHappeningEvent(5))
                 .build();
     }
 }
