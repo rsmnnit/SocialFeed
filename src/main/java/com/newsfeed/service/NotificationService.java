@@ -5,23 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.time.Instant;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class NotificationService {
     @Autowired
     private NotificationHandler notificationHandler;
-    private final ExecutorService executor;
 
-    public NotificationService() {
-        executor = Executors.newFixedThreadPool(2);
-    }
     public DeferredResult<String> getNotification(String userName) {
         long timeoutSecond = 30L;
         DeferredResult<String> output = new DeferredResult<>(timeoutSecond * 1000);
         output.onTimeout(() -> output.setErrorResult("No new notifications."));
         final long startEpochSecond = Instant.now().getEpochSecond();
-        executor.submit(() -> {
+        new Thread(() -> {
             do {
 //                System.out.println("Fetching notification for user: " + userName);
                 final String notifier = notificationHandler.getUserToNotifierUserMap().remove(userName);
@@ -36,7 +30,7 @@ public class NotificationService {
                     throw new RuntimeException(e);
                 }
             } while (startEpochSecond + timeoutSecond > Instant.now().getEpochSecond());
-        });
+        }).start();
         return output;
     }
 }
