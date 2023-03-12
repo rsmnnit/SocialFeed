@@ -6,6 +6,7 @@ import com.newsfeed.service.PostService;
 import com.newsfeed.service.PostServiceImpl;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/post")
 public class PostController {
-    private final PostService postService = new PostServiceImpl();
+    @Autowired
+    private PostService postService;
 
     @PostMapping(path = "/story")
     public void postStory(@RequestBody @NonNull final Story story) {
