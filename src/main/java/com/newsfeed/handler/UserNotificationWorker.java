@@ -10,7 +10,7 @@ public class UserNotificationWorker implements Runnable {
     public UserNotificationWorker(String postOwnerUserName, String userToNotify) {
         this.postOwnerUserName = postOwnerUserName;
         this.userToNotify = userToNotify;
-        userFeedAlertSubscriber = new UserFeedAlertSubscriber();
+        this.userFeedAlertSubscriber = new UserFeedAlertSubscriber();
     }
 
     @Override
