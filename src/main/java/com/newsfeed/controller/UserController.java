@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/follow-topic")
-    public void followTopic(@RequestParam @NonNull UserTopic userTopic) {
+    public void followTopic(@RequestBody @NonNull UserTopic userTopic) {
         userService.followTopic(userTopic);
     }
 

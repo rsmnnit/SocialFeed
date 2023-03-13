@@ -75,11 +75,11 @@ public class UserRepository {
 
     public void followTopic(@NonNull UserTopic userTopic) {
         MongoCursor<Document> users =
-                friendsCollection.find(and(in("userName", userTopic.getUserName()), in("topic", userTopic.getTopic()))).iterator();
+                topicCollection.find(and(in("userName", userTopic.getUserName()), in("topic", userTopic.getTopic()))).iterator();
         if (!users.hasNext()) {
             Document dbObject =
                     Document.parse(gson.toJson(UserTopic.builder().userName(userTopic.getUserName()).topic(userTopic.getTopic()).build()));
-            topicCollection.insertMany(Arrays.asList(dbObject, dbObject));
+            topicCollection.insertOne(dbObject);
         }
     }
 
