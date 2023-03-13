@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +15,6 @@ import java.util.List;
 public class UserTopic {
     @Setter
     private String id;
-    private String userId;
+    private String userName;
     private String topic;
 }

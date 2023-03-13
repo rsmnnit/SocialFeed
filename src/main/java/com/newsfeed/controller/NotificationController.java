@@ -14,7 +14,7 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public DeferredResult<String> getNotifications(@RequestParam String userName) {
         return notificationService.getNotification(userName);
     }

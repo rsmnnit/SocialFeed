@@ -1,6 +1,8 @@
 package com.newsfeed.service;
 
 import com.newsfeed.model.User;
+import com.newsfeed.model.UserFriend;
+import com.newsfeed.model.UserTopic;
 import com.newsfeed.repository.UserRepository;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -25,14 +27,14 @@ public class UserService {
         return userRepository.getUser(userName);
     }
 
-    public void makeFriends(@NonNull String userName1, @NonNull String userName2) {
-        userRepository.makeFriends(userName1, userName2);
-        logger.info("Friends added, User1 : " + userName1 + " and user2: " + userName2);
+    public void makeFriends(@NonNull UserFriend userFriend) {
+        userRepository.makeFriends(userFriend);
+        logger.info("Friends added, User1 : " + userFriend.getUserName() + " and user2: " + userFriend.getFriendUserName());
     }
 
-    public void followTopic(@NonNull String userName, @NonNull String topic) {
-        userRepository.followTopic(userName, topic);
-        logger.info("Following topic, User1 : " + userName + " , Topic: " + topic);
+    public void followTopic(@NonNull UserTopic userTopic) {
+        userRepository.followTopic(userTopic);
+        logger.info("Following topic, User1 : " + userTopic.getUserName() + " , Topic: " + userTopic.getTopic());
     }
 
     public List<String> getFriends(String userName) {

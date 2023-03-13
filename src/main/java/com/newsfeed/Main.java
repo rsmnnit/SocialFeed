@@ -2,6 +2,7 @@ package com.newsfeed;
 
 import com.newsfeed.model.Feed;
 import com.newsfeed.model.User;
+import com.newsfeed.model.UserFriend;
 import com.newsfeed.service.FeedService;
 import com.newsfeed.service.PostService;
 import com.newsfeed.service.PostServiceImpl;
@@ -23,10 +24,10 @@ public class Main {
         userService.registerUser(user3);
         userService.registerUser(user4);
         userService.registerUser(user5);
-        userService.makeFriends(user1.getUserName(), user2.getUserName());
-        userService.makeFriends(user1.getUserName(), user3.getUserName());
-        userService.makeFriends(user2.getUserName(), user4.getUserName());
-        userService.makeFriends(user3.getUserName(), user5.getUserName());
+        userService.makeFriends(UserFriend.builder().userName(user1.getUserName()).friendUserName(user3.getUserName()).build());
+        userService.makeFriends(UserFriend.builder().userName(user1.getUserName()).friendUserName(user3.getUserName()).build());
+        userService.makeFriends(UserFriend.builder().userName(user2.getUserName()).friendUserName(user4.getUserName()).build());
+        userService.makeFriends(UserFriend.builder().userName(user3.getUserName()).friendUserName(user5.getUserName()).build());
         dummyPostPublishService.postDummyStory(user1.getUserName(), 1);
 //        dummyPostPublishService.postDummyStory(user1.getUserName(), 3, Arrays.asList("Covid"));
 //        dummyPostPublishService.postDummyStory(user2.getUserName(), 6);
