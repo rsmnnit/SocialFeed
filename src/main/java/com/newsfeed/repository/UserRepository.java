@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
 import com.newsfeed.connection.DbConnection;
+import com.newsfeed.exceptions.UserAlreadyExistsException;
 import com.newsfeed.model.User;
 import com.newsfeed.model.UserFriend;
 import com.newsfeed.model.UserTopic;
@@ -36,12 +37,11 @@ public class UserRepository {
         this.gson = new Gson();
     }
 
-    public void registerUser(@NonNull User user) {
+    public void registerUser(@NonNull User user) throws UserAlreadyExistsException {
         MongoCursor<Document> users = usersCollection.find(in("userName", user.getUserName())).iterator();
         if (users.hasNext()) {
             logger.error("User already exists");
-            return;
-//            throw new RuntimeException("User already exists");
+            throw new UserAlreadyExistsException("User already exists");
         }
         Document dbObject = Document.parse(gson.toJson(user));
         usersCollection.insertOne(dbObject);
@@ -51,8 +51,7 @@ public class UserRepository {
         MongoCursor<Document> users = usersCollection.find(in("userName", userName)).iterator();
         if (!users.hasNext()) {
             logger.error("User not exists");
-            return User.builder().build();
-//            throw new RuntimeException("User not exists");
+            throw new RuntimeException("User not exists");
         }
         final Document next = users.next();
         User user = (new Gson()).fromJson(next.toJson(), User.class);
@@ -60,25 +59,28 @@ public class UserRepository {
         return user;
     }
 
-    public void makeFriends(@NonNull String userName1, @NonNull String userName2) {
+    public void makeFriends(@NonNull UserFriend userFriend) {
         MongoCursor<Document> users =
-                friendsCollection.find(and(in("userName", userName1), in("friendUserName", userName2))).iterator();
+                friendsCollection.find(and(in("userName", userFriend.getUserName()), in("friendUserName",
+                        userFriend.getFriendUserName()))).iterator();
         if (!users.hasNext()) {
             Document dbObject =
-                    Document.parse(gson.toJson(UserFriend.builder().friendUserName(userName2).userName(userName1).build()));
+                    Document.parse(gson.toJson(UserFriend.builder().friendUserName(userFriend.getUserName())
+                            .userName(userFriend.getFriendUserName()).build()));
             Document dbObject2 =
-                    Document.parse(gson.toJson(UserFriend.builder().friendUserName(userName1).userName(userName2).build()));
+                    Document.parse(gson.toJson(UserFriend.builder().friendUserName(userFriend.getUserName())
+                            .userName(userFriend.getFriendUserName()).build()));
             friendsCollection.insertMany(Arrays.asList(dbObject2, dbObject));
         }
     }
 
-    public void followTopic(@NonNull String userName, @NonNull String topic) {
+    public void followTopic(@NonNull UserTopic userTopic) {
         MongoCursor<Document> users =
-                friendsCollection.find(and(in("userName", userName), in("topic", topic))).iterator();
+                topicCollection.find(and(in("userName", userTopic.getUserName()), in("topic", userTopic.getTopic()))).iterator();
         if (!users.hasNext()) {
             Document dbObject =
-                    Document.parse(gson.toJson(UserTopic.builder().userId(userName).topic(topic).build()));
-            topicCollection.insertMany(Arrays.asList(dbObject, dbObject));
+                    Document.parse(gson.toJson(UserTopic.builder().userName(userTopic.getUserName()).topic(userTopic.getTopic()).build()));
+            topicCollection.insertOne(dbObject);
         }
     }
 

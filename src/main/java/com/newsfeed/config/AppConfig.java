@@ -1,9 +1,11 @@
 package com.newsfeed.config;
 
 import com.newsfeed.handler.NotificationHandler;
+import com.newsfeed.service.FeedService;
 import com.newsfeed.service.NotificationService;
 import com.newsfeed.service.PostService;
 import com.newsfeed.service.PostServiceImpl;
+import com.newsfeed.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,6 +25,16 @@ public class AppConfig {
     @Bean
     public NotificationService notificationService() {
         return new NotificationService();
+    }
+
+    @Bean
+    public FeedService feedService() {
+        return new FeedService();
+    }
+
+    @Bean
+    public UserService userService() {
+        return new UserService();
     }
 
 }
