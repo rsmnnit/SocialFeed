@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
 import com.newsfeed.connection.DbConnection;
+import com.newsfeed.exceptions.UserAlreadyExistsException;
 import com.newsfeed.model.User;
 import com.newsfeed.model.UserFriend;
 import com.newsfeed.model.UserTopic;
@@ -36,11 +37,11 @@ public class UserRepository {
         this.gson = new Gson();
     }
 
-    public void registerUser(@NonNull User user) {
+    public void registerUser(@NonNull User user) throws UserAlreadyExistsException {
         MongoCursor<Document> users = usersCollection.find(in("userName", user.getUserName())).iterator();
         if (users.hasNext()) {
             logger.error("User already exists");
-            throw new RuntimeException("User already exists");
+            throw new UserAlreadyExistsException("User already exists");
         }
         Document dbObject = Document.parse(gson.toJson(user));
         usersCollection.insertOne(dbObject);

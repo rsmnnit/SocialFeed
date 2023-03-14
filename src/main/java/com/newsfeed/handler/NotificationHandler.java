@@ -3,6 +3,7 @@ package com.newsfeed.handler;
 import com.newsfeed.repository.UserRepository;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NotificationHandler {
     private final Map<String, UserNotificationWorker> notificationWorkers;
     @Getter
-    private final Map<String, String> userToNotifierUserMap;
+    private final Map<String, List<String>> userToNotifierUserMap;
     private final UserRepository userRepository;
 
     public NotificationHandler() {
@@ -28,7 +29,7 @@ public class NotificationHandler {
             if (!notificationWorkers.containsKey(friend)) {
                 notificationWorkers.put(friend, new UserNotificationWorker(userName, friend));
             }
-            userToNotifierUserMap.put(friend, userName);
+            userToNotifierUserMap.getOrDefault(friend, new ArrayList<>()).add(userName);
             new Thread(notificationWorkers.get(friend)).start();
         }
     }

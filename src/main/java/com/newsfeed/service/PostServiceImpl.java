@@ -8,8 +8,6 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
@@ -18,14 +16,12 @@ public class PostServiceImpl implements PostService {
 
     public PostServiceImpl() {
         this.postRepository = new PostRepository();
-//        this.notificationHandler = new NotificationHandler();
     }
 
     @Override
     public String postStory(@NonNull Story storyPost) {
         final Story story = storyPost.toBuilder().creationTimeMillis(Instant.now().toEpochMilli()).build();
         final String postId = postRepository.postStory(story);
-        System.out.println("post service service " + notificationHandler);
         notificationHandler.notifyFriendsOfUser(storyPost.getPostOwnerUserName());
         return postId;
     }
@@ -36,10 +32,5 @@ public class PostServiceImpl implements PostService {
         final String eventId = postRepository.postEvent(event);
         notificationHandler.notifyFriendsOfUser(eventPost.getEventOwnerUserName());
         return eventId;
-    }
-
-    @Override
-    public List<Story> fetchPostsById(@NonNull List<Long> postIds) {
-        return new ArrayList<>();
     }
 }

@@ -1,5 +1,6 @@
 package com.newsfeed.service;
 
+import com.newsfeed.exceptions.UserAlreadyExistsException;
 import com.newsfeed.model.User;
 import com.newsfeed.model.UserFriend;
 import com.newsfeed.model.UserTopic;
@@ -18,7 +19,7 @@ public class UserService {
         this.userRepository = new UserRepository();
     }
 
-    public void registerUser(@NonNull User user) {
+    public void registerUser(@NonNull User user) throws UserAlreadyExistsException {
         userRepository.registerUser(user.toBuilder().userName(user.getUserName().toLowerCase()).build());
         logger.info("Registered User: " + user);
     }

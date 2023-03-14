@@ -5,22 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.time.Instant;
+import java.util.List;
 
 public class NotificationService {
     @Autowired
     private NotificationHandler notificationHandler;
+    private static final Long timeoutSecond = 30L;
 
     public DeferredResult<String> getNotification(String userName) {
-        long timeoutSecond = 30L;
         DeferredResult<String> output = new DeferredResult<>(timeoutSecond * 1000);
         output.onTimeout(() -> output.setErrorResult("No new notifications."));
         final long startEpochSecond = Instant.now().getEpochSecond();
         new Thread(() -> {
             do {
-//                System.out.println("Fetching notification for user: " + userName);
-                final String notifier = notificationHandler.getUserToNotifierUserMap().remove(userName);
-                if (notifier != null) {
-                    output.setResult("There are new posts from user: " + notifier);
+                final List<String> notifiers = notificationHandler.getUserToNotifierUserMap().remove(userName);
+                if (notifiers != null && !notifiers.isEmpty()) {
+                    output.setResult("There are new posts from users: " + String.join(", ", notifiers));
                     break;
                 }
                 try {

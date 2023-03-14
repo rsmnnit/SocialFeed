@@ -1,5 +1,6 @@
 package com.newsfeed;
 
+import com.newsfeed.exceptions.UserAlreadyExistsException;
 import com.newsfeed.model.Feed;
 import com.newsfeed.model.User;
 import com.newsfeed.model.UserFriend;
@@ -9,7 +10,7 @@ import com.newsfeed.service.PostServiceImpl;
 import com.newsfeed.service.UserService;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, UserAlreadyExistsException {
         PostService postService = new PostServiceImpl();
         FeedService feedService = new FeedService();
         UserService userService = new UserService();
