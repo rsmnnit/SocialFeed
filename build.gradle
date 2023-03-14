@@ -34,8 +34,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
-//    implementation group: 'org.mongodb', name: 'mongodb-driver', version: '3.12.12'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+
 }
 
 test {

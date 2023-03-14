@@ -5,22 +5,20 @@ import com.newsfeed.model.Story;
 import com.newsfeed.repository.PostRepository;
 import com.newsfeed.repository.UserRepository;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FeedService {
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private static final Integer POST_LIMIT = 10;
-    private static final Integer EVENT_LIMIT = 5;
-    private static final Long SIX_HOURS = 6 * 60 * 60 * 1000L;
-
-    public FeedService() {
-        this.postRepository = new PostRepository();
-        this.userRepository = new UserRepository();
-    }
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
+    public static final Integer POST_LIMIT = 10;
+    public static final Integer EVENT_LIMIT = 5;
+    public static final Long SIX_HOURS = 6 * 60 * 60 * 1000L;
 
     public Feed getFeedForUser(@NonNull String userName) {
         final List<String> friends = userRepository.getFriendsByUser(userName);

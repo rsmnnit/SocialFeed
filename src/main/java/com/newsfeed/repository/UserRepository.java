@@ -1,11 +1,8 @@
 package com.newsfeed.repository;
 
 import com.google.gson.Gson;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-
-import com.newsfeed.connection.DbConnection;
 import com.newsfeed.exceptions.UserAlreadyExistsException;
 import com.newsfeed.model.User;
 import com.newsfeed.model.UserFriend;
@@ -14,6 +11,7 @@ import lombok.NonNull;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,32 +21,27 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.in;
 
 public class UserRepository {
-    MongoCollection<Document> usersCollection;
-    MongoCollection<Document> topicCollection;
-    MongoCollection<Document> friendsCollection;
+    @Autowired
+    private MongoDatabase database;
     private final Gson gson;
     private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
 
     public UserRepository() {
-        MongoDatabase database = DbConnection.getDatabase();
-        this.usersCollection = database.getCollection("users");
-        this.friendsCollection = database.getCollection("friends");
-        this.topicCollection = database.getCollection("topics");
         this.gson = new Gson();
     }
 
     public void registerUser(@NonNull User user) throws UserAlreadyExistsException {
-        MongoCursor<Document> users = usersCollection.find(in("userName", user.getUserName())).iterator();
+        MongoCursor<Document> users = database.getCollection("users").find(in("userName", user.getUserName())).iterator();
         if (users.hasNext()) {
             logger.error("User already exists");
             throw new UserAlreadyExistsException("User already exists");
         }
         Document dbObject = Document.parse(gson.toJson(user));
-        usersCollection.insertOne(dbObject);
+        database.getCollection("users").insertOne(dbObject);
     }
 
     public User getUser(@NonNull String userName) {
-        MongoCursor<Document> users = usersCollection.find(in("userName", userName)).iterator();
+        MongoCursor<Document> users = database.getCollection("users").find(in("userName", userName)).iterator();
         if (!users.hasNext()) {
             logger.error("User not exists");
             throw new RuntimeException("User not exists");
@@ -61,7 +54,7 @@ public class UserRepository {
 
     public void makeFriends(@NonNull UserFriend userFriend) {
         MongoCursor<Document> users =
-                friendsCollection.find(and(in("userName", userFriend.getUserName()), in("friendUserName",
+                database.getCollection("friends").find(and(in("userName", userFriend.getUserName()), in("friendUserName",
                         userFriend.getFriendUserName()))).iterator();
         if (!users.hasNext()) {
             Document dbObject =
@@ -70,22 +63,22 @@ public class UserRepository {
             Document dbObject2 =
                     Document.parse(gson.toJson(UserFriend.builder().friendUserName(userFriend.getUserName())
                             .userName(userFriend.getFriendUserName()).build()));
-            friendsCollection.insertMany(Arrays.asList(dbObject2, dbObject));
+            database.getCollection("friends").insertMany(Arrays.asList(dbObject2, dbObject));
         }
     }
 
     public void followTopic(@NonNull UserTopic userTopic) {
         MongoCursor<Document> users =
-                topicCollection.find(and(in("userName", userTopic.getUserName()), in("topic", userTopic.getTopic()))).iterator();
+                database.getCollection("topics").find(and(in("userName", userTopic.getUserName()), in("topic", userTopic.getTopic()))).iterator();
         if (!users.hasNext()) {
             Document dbObject =
                     Document.parse(gson.toJson(UserTopic.builder().userName(userTopic.getUserName()).topic(userTopic.getTopic()).build()));
-            topicCollection.insertOne(dbObject);
+            database.getCollection("topics").insertOne(dbObject);
         }
     }
 
     public List<String> getFriendsByUser(@NonNull String userName) {
-        final MongoCursor<Document> friendsItr = friendsCollection.find(in("userName", userName)).iterator();
+        final MongoCursor<Document> friendsItr = database.getCollection("friends").find(in("userName", userName)).iterator();
         List<String> friends = new ArrayList<>();
         while (friendsItr.hasNext()) {
             final Document next = friendsItr.next();
@@ -96,7 +89,7 @@ public class UserRepository {
     }
 
     public List<String> getTopicsByUser(String userName) {
-        final MongoCursor<Document> topicsItr = topicCollection.find(in("userName", userName)).iterator();
+        final MongoCursor<Document> topicsItr = database.getCollection("topics").find(in("userName", userName)).iterator();
         List<String> topics = new ArrayList<>();
         while (topicsItr.hasNext()) {
             final Document next = topicsItr.next();

@@ -8,16 +8,14 @@ import com.newsfeed.repository.UserRepository;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class UserService {
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
-    public UserService() {
-        this.userRepository = new UserRepository();
-    }
 
     public void registerUser(@NonNull User user) throws UserAlreadyExistsException {
         userRepository.registerUser(user.toBuilder().userName(user.getUserName().toLowerCase()).build());
