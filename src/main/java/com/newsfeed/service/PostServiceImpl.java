@@ -1,5 +1,6 @@
 package com.newsfeed.service;
 
+import com.newsfeed.exceptions.PostNotFoundException;
 import com.newsfeed.handler.NotificationHandler;
 import com.newsfeed.model.Event;
 import com.newsfeed.model.Story;
@@ -32,5 +33,15 @@ public class PostServiceImpl implements PostService {
         final String eventId = postRepository.postEvent(event);
         notificationHandler.notifyFriendsOfUser(eventPost.getEventOwnerUserName());
         return eventId;
+    }
+
+    @Override
+    public void likeEvent(String eventId) throws PostNotFoundException {
+        postRepository.likeEvent(eventId);
+    }
+
+    @Override
+    public void likePost(String postId) throws PostNotFoundException {
+        postRepository.likePost(postId);
     }
 }

@@ -8,6 +8,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Date;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,7 +28,7 @@ public class Event {
     @NonNull
     private String eventDescription;
     @NonNull
-    private String eventDate;
+    private Date eventDate;
     @NonNull
     private String venue;
     @NonNull

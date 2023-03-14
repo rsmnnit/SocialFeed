@@ -38,7 +38,7 @@ public class UserController {
         try {
             userService.registerUser(user);
         } catch (UserAlreadyExistsException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already registered");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
