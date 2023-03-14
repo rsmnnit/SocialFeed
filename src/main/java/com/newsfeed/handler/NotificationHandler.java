@@ -2,6 +2,7 @@ package com.newsfeed.handler;
 
 import com.newsfeed.repository.UserRepository;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,11 +14,11 @@ public class NotificationHandler {
     private final Map<String, UserNotificationWorker> notificationWorkers;
     @Getter
     private final Map<String, List<String>> userToNotifierUserMap;
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public NotificationHandler() {
         notificationWorkers = new HashMap<>();
-        userRepository = new UserRepository();
         userToNotifierUserMap = new ConcurrentHashMap<>();
     }
 
