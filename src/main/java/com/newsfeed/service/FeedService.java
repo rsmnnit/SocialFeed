@@ -16,9 +16,9 @@ public class FeedService {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
-    private static final Integer POST_LIMIT = 10;
-    private static final Integer EVENT_LIMIT = 5;
-    private static final Long SIX_HOURS = 6 * 60 * 60 * 1000L;
+    public static final Integer POST_LIMIT = 10;
+    public static final Integer EVENT_LIMIT = 5;
+    public static final Long SIX_HOURS = 6 * 60 * 60 * 1000L;
 
     public Feed getFeedForUser(@NonNull String userName) {
         final List<String> friends = userRepository.getFriendsByUser(userName);
