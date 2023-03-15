@@ -24,13 +24,14 @@ public class NotificationHandler {
 
     public void notifyFriendsOfUser(String userName) {
         final List<String> friendsByUser = userRepository.getFriendsByUser(userName);
-//        System.out.println("Friends of user : " + userName);
-//        friendsByUser.stream().forEach(System.out::println);
         for (String friend : friendsByUser) {
             if (!notificationWorkers.containsKey(friend)) {
                 notificationWorkers.put(friend, new UserNotificationWorker(userName, friend));
             }
-            userToNotifierUserMap.getOrDefault(friend, new ArrayList<>()).add(userName);
+            System.out.println("Sending notification to user " + friend);
+            userToNotifierUserMap.putIfAbsent(friend, new ArrayList<>());
+            userToNotifierUserMap.get(friend).add(userName);
+            System.out.println("notification in notification handler: " + userToNotifierUserMap.size());
             new Thread(notificationWorkers.get(friend)).start();
         }
     }

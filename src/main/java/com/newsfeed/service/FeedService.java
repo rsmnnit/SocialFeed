@@ -1,5 +1,6 @@
 package com.newsfeed.service;
 
+import com.newsfeed.handler.NotificationHandler;
 import com.newsfeed.model.Feed;
 import com.newsfeed.model.Story;
 import com.newsfeed.repository.PostRepository;
@@ -16,11 +17,13 @@ public class FeedService {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired private NotificationHandler notificationHandler;
     public static final Integer POST_LIMIT = 10;
     public static final Integer EVENT_LIMIT = 5;
     public static final Long SIX_HOURS = 6 * 60 * 60 * 1000L;
 
     public Feed getFeedForUser(@NonNull String userName) {
+        notificationHandler.getUserToNotifierUserMap().remove(userName);
         final List<String> friends = userRepository.getFriendsByUser(userName);
         final List<String> topics = userRepository.getTopicsByUser(userName);
         final List<Story> storiesByFriends = postRepository.fetchStoriesByUsers(friends, POST_LIMIT);
