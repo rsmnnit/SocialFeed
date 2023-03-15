@@ -18,6 +18,7 @@ public class NotificationService {
         final long startEpochSecond = Instant.now().getEpochSecond();
         new Thread(() -> {
             do {
+                System.out.println("notification in notification service: " + notificationHandler.getUserToNotifierUserMap().size());
                 final List<String> notifiers = notificationHandler.getUserToNotifierUserMap().remove(userName);
                 if (notifiers != null && !notifiers.isEmpty()) {
                     output.setResult("There are new posts from users: " + String.join(", ", notifiers));
